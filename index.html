@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .slider-container {
+            width: 300px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .slider {
+            width: 100%;
+            margin: 15px 0;
+        }
+        .slider-label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .slider-value {
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            background: linear-gradient(to right, #4CAF50 0%, #4CAF50 var(--value), #d3d3d3 var(--value), #d3d3d3 100%);
+        }
+        input[type=range]:hover {
+            opacity: 1;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider">
+            <label for="how-much" class="slider-label">How much</label>
+            <input type="range" id="how-much" name="how-much" min="0" max="7" step="1" value="0" oninput="updateHowMuchValue(this.value)">
+            <div id="how-much-value" class="slider-value">500</div>
+        </div>
+        <div class="slider">
+            <label for="how-long" class="slider-label">How long</label>
+            <input type="range" id="how-long" name="how-long" min="0" max="3" step="1" value="0" oninput="updateHowLongValue(this.value)">
+            <div id="how-long-value" class="slider-value">2 Months</div>
+        </div>
+    </div>
+
+    <script>
+        const howMuchValues = [500, 600, 700, 800, 900, 1000, 5000, 10000];
+        const howLongValuesInitial = ["2 Months", "3 Months", "4 Months", "5 Months"];
+        const howLongValuesExtended = ["4 Months", "5 Months"];
+
+        function updateHowMuchValue(value) {
+            const amount = howMuchValues[value];
+            document.getElementById('how-much-value').innerText = amount;
+            updateSliderBackground(document.getElementById('how-much'));
+
+            if (amount > 1000) {
+                document.getElementById('how-long').max = 1;
+                updateHowLongValue(document.getElementById('how-long').value);
+            } else {
+                document.getElementById('how-long').max = 3;
+                updateHowLongValue(document.getElementById('how-long').value);
+            }
+        }
+
+        function updateHowLongValue(value) {
+            const howMuchValue = howMuchValues[document.getElementById('how-much').value];
+            const howLongValues = howMuchValue > 1000 ? howLongValuesExtended : howLongValuesInitial;
+            document.getElementById('how-long-value').innerText = howLongValues[value];
+            updateSliderBackground(document.getElementById('how-long'));
+        }
+
+        function updateSliderBackground(slider) {
+            const percentage = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            slider.style.setProperty('--value', `${percentage}%`);
+        }
+
+        // Initialize the slider background on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSliderBackground(document.getElementById('how-much'));
+            updateSliderBackground(document.getElementById('how-long'));
+        });
+    </script>
+</body>
+</html>
